@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investment Application Form</title>
+
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px 40px;
+      margin: 40px auto;
+      width: 100%;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1,
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="number"],
+    input[type="file"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      height: 60px;
+      width: auto;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+  </style>
+
+  <script>
+    const states = {
+      Kenya: [
+        "Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret", "Machakos", "Nyeri"
+      ],
+      "United States": [
+        "California", "Texas", "New York", "Florida", "Illinois", "Georgia"
+      ],
+      India: [
+        "Maharashtra", "Delhi", "Karnataka", "Tamil Nadu", "Gujarat", "West Bengal"
+      ]
+    };
+
+    function updateStates() {
+      const nationality = document.getElementById('nationality').value;
+      const stateSelect = document.getElementById('state');
+      stateSelect.innerHTML = ''; // clear previous options
+
+      if (states[nationality]) {
+        states[nationality].forEach(state => {
+          const option = document.createElement('option');
+          option.value = state;
+          option.textContent = state;
+          stateSelect.appendChild(option);
+        });
+      } else {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Select nationality first';
+        stateSelect.appendChild(option);
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <form id="investmentForm" enctype="multipart/form-data" action="property.html" method="GET">
+    <div class="logo-container">
+      <img src="logo.jpg" alt="Logo">
+    </div>
+
+    <h1>Investment Application Form</h1>
+
+    <div class="section">
+      <h2>Personal Information</h2>
+
+      <label>Full Name:</label>
+      <input type="text" name="full_name" required>
+
+      <label>National ID / Passport Number:</label>
+      <input type="text" name="id_number" required>
+
+      <label>Date of Birth:</label>
+      <input type="date" name="dob" required>
+
+      <label>Nationality:</label>
+      <select name="nationality" id="nationality" onchange="updateStates()" required>
+        <option value="">Select</option>
+        <option value="Kenya">Kenya</option>
+        <option value="United States">United States</option>
+        <option value="India">India</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>State / Province:</label>
+      <select name="state" id="state" required>
+        <option value="">Select nationality first</option>
+      </select>
+
+      <label>Phone Number:</label>
+      <input type="tel" name="phone" required>
+
+      <label>Email Address:</label>
+      <input type="email" name="email" required>
+
+      <label>Residential Address:</label>
+      <textarea name="address" rows="3" required></textarea>
+    </div>
+
+    <div class="section">
+      <h2>Investment Details</h2>
+
+      <label>Amount you wish to invest (KES):</label>
+      <input type="number" name="investment_amount" min="10000" required>
+
+      <label>Preferred Investment Plan:</label>
+      <input type="text" name="investment_plan">
+
+      <label>Source of Funds:</label>
+      <select name="source_of_funds" required>
+        <option value="">Select</option>
+        <option value="salary">Salary</option>
+        <option value="business">Business</option>
+        <option value="savings">Savings</option>
+        <option value="other">Other</option>
+      </select>
+
+      <label>Payment Method:</label>
+      <select name="payment_method" required>
+        <option value="">Select</option>
+        <option value="Crypto Currency">Crypto Currency</option>
+        <option value="mpesa">Mpesa</option>
+        <option value="bank_transfer">Bank Transfer</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <h2>Banking Details (for payouts)</h2>
+
+      <label>Bank Name:</label>
+      <input type="text" name="bank_name">
+
+      <label>Account Name:</label>
+      <input type="text" name="account_name">
+
+      <label>Account Number:</label>
+      <input type="text" name="account_number">
+
+      <label>Branch:</label>
+      <input type="text" name="branch">
+
+      <label>OR Mpesa Number for payouts:</label>
+      <input type="tel" name="mpesa_payout">
+    </div>
+
+    <div class="section">
+      <h2>Compliance and KYC</h2>
+
+      <label>Upload ID/Passport Copy:</label>
+      <input type="file" name="id_copy" accept=".pdf,.jpg,.jpeg,.png" required>
+
+      <label>Upload Passport-sized Photo:</label>
+      <input type="file" name="passport_photo" accept=".jpg,.jpeg,.png" required>
+    </div>
+
+    <div class="section">
+      <h2>Terms and Conditions</h2>
+
+      <label class="checkbox-label">
+        <input type="checkbox" name="agree_terms" required>
+        I have read and agreed to the <a href="../terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+      </label>
+    </div>
+
+    <div class="section">
+      <h2>Declarations</h2>
+
+      <label class="checkbox-label">
+        <input type="checkbox" name="legitimate_funds" required>
+        I confirm that the funds I am investing are from legitimate sources.
+      </label>
+
+      <label class="checkbox-label">
+        <input type="checkbox" name="risk_understanding" required>
+        I understand that all investments carry some risk.
+      </label>
+    </div>
+
+    <button type="submit">Create investment Portfolio</button>
+  </form>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('#investmentForm').on('submit', function(e) {
+    e.preventDefault(); // Stop default form submission
+
+    // Validate checkboxes manually if needed
+    if (!$('[name="agree_terms"]').is(':checked') ||
+        !$('[name="legitimate_funds"]').is(':checked') ||
+        !$('[name="risk_understanding"]').is(':checked')) {
+      alert("Please agree to all terms and declarations before proceeding.");
+      return;
+    }
+
+    var formData = new FormData(this);
+
+    $.ajax({
+      url: 'registerInvestor.php', // PHP file that handles processing
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function(response) {
+        if (response === 'success') {
+          alert("Your portfolio has been successfully created! Taking you to property section")
+          setTimeout(() => {
+            window.location.href = 'property.html'; // Redirect on success
+          }, 1500);
+          
+        } else {
+          alert('Error: ' + response); // Show PHP error message
+        }
+      },
+      error: function() {
+        alert('An error occurred while submitting the form.');
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investment Properties</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .selected-card {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .select-btn {
+      background-color: #3b82f6;
+      color: white;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      border-radius: 0.75rem;
+    }
+
+    .select-btn:hover {
+      background-color: #2563eb;
+    }
+
+    .selected-btn {
+      background-color: #60a5fa;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <!-- Header -->
+  <header class="text-center mb-10">
+    <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 tracking-tight mb-2">Kenya REIT Portfolio</h1>
+    <p class="text-lg md:text-xl text-gray-500">Explore and evaluate top-performing investment properties in Kenya</p>
+  </header>
+
+  <!-- Container -->
+  <div id="propertyContainer" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+
+  <!-- Modal -->
+  <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white rounded-lg overflow-hidden w-full max-w-2xl relative">
+      <button id="closeModal" class="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
+      <div class="p-4 grid md:grid-cols-2 gap-6">
+        <div class="relative">
+            <div class="w-full h-64 mb-2 touch-pan-x" id="imageContainer">
+                <img id="sliderImage" src="" alt="" class="w-full h-full object-cover rounded-lg" />
+            </div>
+            <div class="dotContainer flex justify-center gap-2"></div>
+        </div>
+        <div>
+            <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+            <p id="modalLocation" class="text-sm text-gray-600 mb-2"></p>
+            <p id="modalDescription" class="text-sm mb-4 text-gray-700 italic"></p>
+            <div class="space-y-2 text-sm">
+              <p><strong>Minimum Investment:</strong> <span id="modalMin"></span></p>
+              <p><strong>Expected IRR:</strong> <span id="modalIRR"></span></p>
+              <p><strong>Target Hold Period:</strong> <span id="modalHold"></span> years</p>
+              <p><strong>Investment Type:</strong> <span id="modalType"></span></p>
+              <p><strong>Property Type:</strong> <span id="modalProperty"></span></p>
+            </div>
+            <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Express Interest</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("detailModal");
+    const closeModal = document.getElementById("closeModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalLocation = document.getElementById("modalLocation");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalMin = document.getElementById("modalMin");
+    const modalIRR = document.getElementById("modalIRR");
+    const modalHold = document.getElementById("modalHold");
+    const modalType = document.getElementById("modalType");
+    const modalProperty = document.getElementById("modalProperty");
+    const sliderImage = document.getElementById("sliderImage");
+    const dotContainer = document.querySelector("#detailModal .dotContainer");
+    const imageContainer = document.getElementById("imageContainer");
+
+    let currentSlide = 0;
+    let currentSlides = [];
+    let startX = 0;
+
+    function changeSlide(index) {
+      currentSlide = index;
+      sliderImage.src = currentSlides[currentSlide];
+      updateDots();
+    }
+
+    function updateDots() {
+      dotContainer.innerHTML = "";
+      currentSlides.forEach((_, idx) => {
+        const dot = document.createElement("button");
+        dot.className = `w-3 h-3 rounded-full ${idx === currentSlide ? "bg-gray-400" : "bg-gray-300"}`;
+        dot.onclick = () => changeSlide(idx);
+        dotContainer.appendChild(dot);
+      });
+    }
+
+    sliderImage.addEventListener("click", () => {
+      currentSlide = (currentSlide + 1) % currentSlides.length;
+      changeSlide(currentSlide);
+    });
+
+    imageContainer.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    imageContainer.addEventListener("touchend", (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      if (Math.abs(diff) > 30) {
+        currentSlide = diff > 0 ? (currentSlide + 1) % currentSlides.length : (currentSlide - 1 + currentSlides.length) % currentSlides.length;
+        changeSlide(currentSlide);
+      }
+    });
+
+    closeModal.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+
+    function createCard(property) {
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-xl shadow-md overflow-hidden card cursor-pointer";
+      card.innerHTML = `
+        <div class="bg-blue-50 text-sm font-semibold px-4 py-2 text-blue-800">Open for Investment</div>
+        <img src="${property.images[0]}" alt="${property.name}" class="w-full h-48 object-cover" />
+        <div class="p-4 text-sm space-y-1">
+          <h3 class="text-base font-bold text-gray-800 mb-1">${property.name}</h3>
+          <p><strong>Minimum Investment:</strong> KES ${Number(property.min).toLocaleString()}</p>
+          <p><strong>Investment Type:</strong> ${property.type}</p>
+          <p><strong>Property Type:</strong> ${property.property}</p>
+          <p><strong>Location:</strong> ${property.location}</p>
+        </div>
+      `;
+
+      card.addEventListener("click", () => {
+        currentSlides = property.images;
+        currentSlide = 0;
+        changeSlide(0);
+
+        modalTitle.textContent = property.name;
+        modalLocation.textContent = property.location;
+        modalDescription.textContent = property.description;
+        modalMin.textContent = `KES ${Number(property.min).toLocaleString()}`;
+        modalIRR.textContent = `${property.irr}%`;
+        modalHold.textContent = property.hold;
+        modalType.textContent = property.type;
+        modalProperty.textContent = property.property;
+
+        modal.classList.remove("hidden");
+      });
+
+      document.getElementById("propertyContainer").appendChild(card);
+    }
+
+    // Properties Array
+    const properties = [
+      {
+        id: 1,
+        name: "Qwetu Hurlingham",
+        location: "Nairobi, Kenya, KenyaNairobi",
+        irr: 8.5,
+        hold: 5,
+        description: "Hurlingham PBSA, a Qwetu Student Residences project in Nairobi’s Hurlingham area, houses over 800 students and offers a vibrant, amenity-rich environment. Its efficient design features multiple access points and centrally located shared spaces like lounges, study rooms, a gym, and laundry facilities.",
+        min: 50000,
+        type: "Equity",
+        property: "Commercial",
+        images: [
+          "assets/images/Qwetu-Hurlingham/1-1.jpg",
+          "assets/images/Qwetu-Hurlingham/3-1 (1).jpg",
+          "assets/images/Qwetu-Hurlingham/5-1.jpg"
+        ]
+      },
+      {
+        id: 1,
+        name: "Pension Towers",
+        location: "Nairobi CBD",
+        irr: 8.5,
+        hold: 5,
+        description: "Prime office building in Nairobi CBD.",
+        min: 500000,
+        type: "Equity",
+        property: "Commercial Office",
+        images: [
+          "./assets/images/pension-towers/ft-img-1.jpg",
+          "./assets/images/pension-towers/ft-img-2.jpg",
+          "./assets/images/pension-towers/ft-img-3.jpg"
+        ]
+      },
+      {
+        id: 4,
+      name: "Freedom Heights Mall",
+      location: "Lang’ata Road, Nairobi, Kenya",
+      irr: 9.8,
+      hold: 2,
+      description: "Freedom Heights is a mixed-use development by CPF in Lang’ata, serving middle-income residents with housing, retail, and business spaces",
+      min: 100000,
+      type: "Equity",
+      property: "Residential",
+        images: [
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal1.jpeg",
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal1.jpeg",
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal2 .jpeg"
+        ]
+      },
+      {
+        id: 3,
+        name: "Mombasa Bay Apartments",
+        location: "Mombasa, Kenya",
+        irr: 11,
+        hold: 2,
+        description: "High-end apartments on Mombasa coastline.",
+        min: 180000,
+        type: "Equity",
+        property: "Residential",
+        images: [
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments.jpeg",
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments2.jpeg",
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments3.jpeg"
+        ]
+      },
+       {
+        id: 10,
+      name: "Qwetu Parklands",
+      location: " Nairobi CBD",
+      irr: 9.5,
+      hold: 4,
+      description: "Qwetu Parklands houses a dynamic community of over 500 driven students from institutions like UON, MKU, Evelyn College, Graffins, and several others.",
+      min: 80000,
+      type: "Equity",
+      property: "Residential",
+        images: [
+          "assets/images/Qwetu-Parklands/building-e1946579.jpg",
+          "assets/images/Qwetu-Parklands/cluster-b37477d4.jpg",
+          "assets/images/Qwetu-Parklands/premium-4e68db25.jpg"
+        ]
+      },
+                 {
+        id: 12,
+      name: "Lavington Towers",
+      location: "Lavington, Nairobi",
+      irr: 8.5,
+      hold: 3,
+      description: "A prime office property located in the upscale Lavington area, offering modern office spaces with high rental.",
+      min: 2500000,
+      type: "Equity",
+      property: "Residential",
+        images: [
+          "assets/images/Lavington-Towers/WhatsApp-Image-2024-09-16-at-13.28.11-1-scaled.jpeg",
+          "assets/images/Lavington-Towers/6-Reasons-why-you-should-invest-in-Lavington.png",
+        ]
+      },
+           {
+        id: 2,
+      name: "Greenspan Mall",
+      location: "Donholm, Nairobi",
+      irr: .5,
+      hold: 2,
+      description: "A mixed-use development featuring retail spaces and office units, anchored by Naivas Supermarket, providing stable rental income.",
+      min: 150000,
+      type: "Equity",
+      property: "Residential",
+        images: [
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-jpeg.webp",
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-10-jpeg.webp",
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-2-jpeg.webp"
+        ]
+      },
+           {
+        id: 5,
+      name: "Old Mutual Tower",
+      location: " Hospital Road, Upper Hill, Nairobi",
+      irr: 4.2,
+      hold: 2,
+      description: "Mixed-use development in the heart of Nairobi.",
+      min: 100000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Old-Mutual-Tower/The Old Mutual Tower.jpg",
+          "assets/images/Old-Mutual-Tower/OLD MUTUAL TOWER .jpeg",
+          "assets/images/Old-Mutual-Tower/Old Mutual Tower3 .jpeg"
+        ]
+      },
+           {
+        id: 8,
+      name: "NCBA Annex",
+      location: "Woodvale Grove, Westlands, Nairobi",
+      irr: 3.7,
+      hold: 3,
+      description: "NCBA Annex is a prime commercial property in Westlands, Nairobi, anchored by NCBA Bank and ideally positioned in a high-traffic business hub.",
+      min: 100000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/NCBA-Annex/unnamed (1).webp",
+          "assets/images/NCBA-Annex/unnamed (2).webp",
+          "assets/images/NCBA-Annex/unnamed.webp"
+        ]
+      },
+           {
+        id: 11,
+      name: "GreenTech Park",
+      location: "Nairobi, Kenya",
+      irr: 4.0,
+      hold: 3,
+      description: "A hub for tech startups with ample green spaces.",
+      min: 1500000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/GreenTech-Park/greentech_park-maligaon_guwahati-guwahati-greentech_projects.avif",
+          "assets/images/GreenTech-Park/download.jpg",
+          "assets/images/GreenTech-Park/fs.avif"
+        ]
+      },
+           {
+        name: "Commercial Property in Nairobi CBD",
+      location: "Nairobi CBD",
+      irr: 300 ,
+      hold: 1,
+      description: "The property is in a prime Nairobi CBD location at Tom Mboya Street and Hakati Road, near major landmarks and transport hubs, offering high visibility.",
+      min: 20000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Commercial-Property-in-Nairobi-CBD/img20220201131100-min.jpg",
+          "assets/images/Commercial-Property-in-Nairobi-CBD/dc31da15-d670-448d-8c62-770ee7c7eb93.webp",
+          "assets/images/Commercial-Property-in-Nairobi-CBD/84336469-d1a5-4e9b-a3f5-bf2630356558.webp"
+        ]
+      },
+           {
+        id: 6,
+      name: "Ashok Leyland",
+      location: "ICD Road, Off Mombasa Road, Nairobi",
+      irr: 350,
+      hold: 1,
+      description: "EThe property presents a unique opportunity to acquire a prime site, comprehensively developed with a four storey office block, motor showroom and offices, separate warehouses and motor vehicle workshops with a total gross lettable area of approximately 99,300 square feet.",
+      min: 20000,
+      type: "Equity",
+      property: "Mixed",
+        images: [
+          "assets/images/Ashok-Leyland/46ddb5e4-3f53-499e-8df3-8383b47bc723-0.webp",
+          "assets/images/Ashok-Leyland/78b38a30-f367-42f1-879d-351c1bb8d8d9-0.webp",
+          "assets/images/Ashok-Leyland/c0139280-6c98-473d-a5e4-cc5fc50da36e-0.webp",
+          "assets/images/Ashok-Leyland/fb1d9c3c-4f29-46dc-9da2-42610b7efedf-0.webp"
+        ]
+      },
+           {
+        id: 9,
+      name: "iHub",
+      location: "Jahazi Building, 154 James Gichuru Road, Lavington, Nairobi, Kenya",
+      irr: 15,
+      hold: 1,
+      description: "Established in 2010, iHub is one of Nairobi's most renowned innovation hubs. It serves as an open space for technologists, investors, tech companies, and hackers to interact and work on ideas. iHub has been instrumental in nurturing startups and fostering a collaborative tech community in Kenya.",
+      min: 10000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Prime-Tech-Hub/1731755916831.png",
+          "assets/images/Prime-Tech-Hub/IHub (1).jpg",
+          "assets/images/Prime-Tech-Hub/ihub.jpg"
+        ]
+      },
+    ];
+
+    // Generate cards
+    properties.forEach(createCard);
+
+  </script>
+
+</body>
+</html>

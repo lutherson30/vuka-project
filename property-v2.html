@@ -27,21 +27,6 @@
       color: white;
       font-weight: bold;
     }
-
-    .submit-btn {
-      background-color: #1d4ed8;
-      color: white;
-      font-weight: bold;
-      width: 100%;
-      padding: 12px;
-      border-radius: 0.75rem;
-      text-align: center;
-      transition: background-color 0.3s ease;
-    }
-
-    .submit-btn:hover {
-      background-color: #1e40af;
-    }
   </style>
 </head>
 <body class="bg-gray-100 p-6 font-sans">
@@ -51,78 +36,19 @@
     <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 tracking-tight mb-2">Kenya REIT Portfolio</h1>
     <p class="text-lg md:text-xl text-gray-500">Explore and evaluate top-performing investment properties in Kenya</p>
   </header>
-
-  <!-- Search and Sort Controls -->
-  <div class="bg-white shadow-md rounded-xl p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-5xl mx-auto mb-10">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="🔍 Search by name or location..."
-      class="flex-1 p-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
-    />
-    <select
-      id="sortSelect"
-      class="w-full md:w-56 p-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-    >
-      <option value="">Sort by</option>
-      <option value="irr">IRR (High to Low)</option>
-      <option value="hold">Hold Period (Low to High)</option>
-    </select>
-  </div>
-
   <!-- Long Term Investment Properties -->
   <section class="mb-12">
     <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Long Term Investment Properties</h2>
     <div id="longTermContainer" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
-    </section>
-
-  <!-- Short Term Investment Properties -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Short Term Investment Properties</h2>
-    <div id="shortTermContainer" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
   </section>
-
-  <!-- Aggressive Investment Properties -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Aggressive Investment Properties</h2>
-    <div id="aggressiveContainer" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
-  </section>
+  
+  <!-- Container -->
+  <div id="propertyContainer" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
 
   <!-- Modal -->
-  <div id="detailModalxx" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">
-      <button id="closeModal" class="absolute top-2 right-3 text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="relative">
-          <div class="overflow-hidden rounded-lg">
-            <img id="sliderImage" src="" class="w-full h-60 object-cover rounded-lg transition duration-300" />
-          </div>
-          <div class="flex justify-center gap-2 mt-2">
-            <button onclick="changeSlide(0)" class="w-3 h-3 rounded-full bg-gray-400"></button>
-            <button onclick="changeSlide(1)" class="w-3 h-3 rounded-full bg-gray-300"></button>
-            <button onclick="changeSlide(2)" class="w-3 h-3 rounded-full bg-gray-300"></button>
-          </div>
-        </div>
-        <div>
-          <h2 id="modalTitle" class="text-xl font-bold mb-2">Property Title</h2>
-          <p id="modalLocation" class="text-sm text-gray-600 mb-2">Location</p>
-          <p id="modalDescription" class="text-sm mb-4 text-gray-700 italic">Description</p>
-          <div class="space-y-2 text-sm">
-            <p><strong>Minimum Investment:</strong> <span id="modalMin"></span></p>
-            <p><strong>Expected IRR:</strong> <span id="modalIRR"></span></p>
-            <p><strong>Target Hold Period:</strong> <span id="modalHold"></span> years</p>
-            <p><strong>Investment Type:</strong> <span id="modalType"></span></p>
-            <p><strong>Property Type:</strong> <span id="modalProperty"></span></p>
-          </div>
-          <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Express Interest</button>
-        </div>
-      </div>
-    </div>
-  </div>
-   <!-- Modal -->
-  <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white rounded-lg overflow-hidden w-full max-w-2xl relative">
-      <button id="closeModal" class="absolute top-2 right-2 text-gray-600">&times;</button>
+      <button id="closeModal" class="absolute top-2 right-2 text-gray-600 text-3xl">&times;</button>
       <div class="p-4 grid md:grid-cols-2 gap-6">
         <div class="relative">
             <div class="w-full h-64 mb-2 touch-pan-x" id="imageContainer">
@@ -131,36 +57,23 @@
             <div class="dotContainer flex justify-center gap-2"></div>
         </div>
         <div>
-            <div>
-                <h2 id="modalTitle" class="text-xl font-bold mb-2">Property Title</h2>
-                <p id="modalLocation" class="text-sm text-gray-600 mb-2">Location</p>
-                <p id="modalDescription" class="text-sm mb-4 text-gray-700 italic">Description</p>
-                <div class="space-y-2 text-sm">
-                <p><strong>Minimum Investment:</strong> <span id="modalMin"></span></p>
-                <p><strong>Expected IRR:</strong> <span id="modalIRR"></span></p>
-                <p><strong>Target Hold Period:</strong> <span id="modalHold"></span> years</p>
-                <p><strong>Investment Type:</strong> <span id="modalType"></span></p>
-                <p><strong>Property Type:</strong> <span id="modalProperty"></span></p>
+            <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+            <p id="modalLocation" class="text-sm text-gray-600 mb-2"></p>
+            <p id="modalDescription" class="text-sm mb-4 text-gray-700 italic"></p>
+            <div class="space-y-2 text-sm">
+              <p><strong>Minimum Investment:</strong> <span id="modalMin"></span></p>
+              <p><strong>Expected IRR:</strong> <span id="modalIRR"></span></p>
+              <p><strong>Target Hold Period:</strong> <span id="modalHold"></span> years</p>
+              <p><strong>Investment Type:</strong> <span id="modalType"></span></p>
+              <p><strong>Property Type:</strong> <span id="modalProperty"></span></p>
             </div>
-            <div>
-                <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Express Interest</button>
-            </div>
+            <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Express Interest</button>
         </div>
-        
       </div>
     </div>
   </div>
 
-  <!-- Submit Button -->
-  <div class="mt-8">
-    <button id="submitBtn" class="submit-btn">Submit Investment</button>
-  </div>
-
-  <!-- Scripts -->
   <script>
-    
-    const searchInput = document.getElementById("searchInput");
-    const sortSelect = document.getElementById("sortSelect");
     const modal = document.getElementById("detailModal");
     const closeModal = document.getElementById("closeModal");
     const modalTitle = document.getElementById("modalTitle");
@@ -175,7 +88,7 @@
     const dotContainer = document.querySelector("#detailModal .dotContainer");
     const imageContainer = document.getElementById("imageContainer");
 
-    let currentSlide = 0; 
+    let currentSlide = 0;
     let currentSlides = [];
     let startX = 0;
 
@@ -200,7 +113,6 @@
       changeSlide(currentSlide);
     });
 
-    // Touch support
     imageContainer.addEventListener("touchstart", (e) => {
       startX = e.touches[0].clientX;
     });
@@ -209,127 +121,86 @@
       const endX = e.changedTouches[0].clientX;
       const diff = startX - endX;
       if (Math.abs(diff) > 30) {
-        if (diff > 0) {
-          currentSlide = (currentSlide + 1) % currentSlides.length;
-        } else {
-          currentSlide = (currentSlide - 1 + currentSlides.length) % currentSlides.length;
-        }
+        currentSlide = diff > 0 ? (currentSlide + 1) % currentSlides.length : (currentSlide - 1 + currentSlides.length) % currentSlides.length;
         changeSlide(currentSlide);
       }
     });
-    
 
-    function createCard(index, name, location, irr, hold, description, min, type, property, containerId, image) {
+    closeModal.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+
+    function createCard(property) {
       const card = document.createElement("div");
       card.className = "bg-white rounded-xl shadow-md overflow-hidden card cursor-pointer";
-      card.dataset.name = name;
-      card.dataset.location = location;
-      card.dataset.irr = irr;
-      card.dataset.hold = hold;
-      card.dataset.description = description;
-      card.dataset.min = min;
-      card.dataset.type = type;
-      card.dataset.property = property;
-
       card.innerHTML = `
-  <div class="bg-blue-50 text-sm font-semibold px-4 py-2 text-blue-800">Open for Investment</div>
-   <img src="${image}" alt="${name}" class="w-full h-48 object-cover" />
-  <div class="p-4 text-sm space-y-1">
-    <h3 class="text-base font-bold text-gray-800 mb-1">${name}</h3>
-    <p><strong>Minimum Investment:</strong> KES ${Number(min).toLocaleString()}</p>
-    <p><strong>Investment Type:</strong> ${type}</p>
-    <p><strong>Property Type:</strong> ${property}</p>
-    <p><strong>Location:</strong> ${location}</p>
-  </div>
-  <button class="select-btn w-full py-2 rounded-lg">Select this Property</button>
-`;
-
-
-      document.getElementById(containerId).appendChild(card);
-
-      const selectButton = card.querySelector(".select-btn");
-      selectButton.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const allCards = document.querySelectorAll(".card");
-        allCards.forEach(c => {
-          const btn = c.querySelector(".select-btn");
-          btn.classList.remove("selected-btn");
-          c.classList.remove("selected-card");
-        });
-        selectButton.classList.add("selected-btn");
-        card.classList.add("selected-card");
-      });
+        <div class="bg-blue-50 text-sm font-semibold px-4 py-2 text-blue-800">Open for Investment</div>
+        <img src="${property.images[0]}" alt="${property.name}" class="w-full h-48 object-cover" />
+        <div class="p-4 text-sm space-y-1">
+          <h3 class="text-base font-bold text-gray-800 mb-1">${property.name}</h3>
+          <p><strong>Minimum Investment:</strong> KES ${Number(property.min).toLocaleString()}</p>
+          <p><strong>Investment Type:</strong> ${property.type}</p>
+          <p><strong>Property Type:</strong> ${property.property}</p>
+          <p><strong>Location:</strong> ${property.location}</p>
+        </div>
+      `;
 
       card.addEventListener("click", () => {
-        modalTitle.textContent = name;
-        modalLocation.textContent = location;
-        modalDescription.textContent = description || "";
-        modalMin.textContent = `KES ${parseInt(min).toLocaleString()}`;
-        modalIRR.textContent = `${irr}%`;
-        modalHold.textContent = hold;
-        modalType.textContent = type;
-        modalProperty.textContent = property;
+        currentSlides = property.images;
+        currentSlide = 0;
         changeSlide(0);
+
+        modalTitle.textContent = property.name;
+        modalLocation.textContent = property.location;
+        modalDescription.textContent = property.description;
+        modalMin.textContent = `KES ${Number(property.min).toLocaleString()}`;
+        modalIRR.textContent = `${property.irr}%`;
+        modalHold.textContent = property.hold;
+        modalType.textContent = property.type;
+        modalProperty.textContent = property.property;
+
         modal.classList.remove("hidden");
       });
+
+      document.getElementById("propertyContainer").appendChild(card);
     }
 
-    // ✅ Manually add 67 Gitanga
-    createCard(
-      999,
-      "Qwetu Hurlingham",
-      "Nairobi, Kenya, KenyaNairobi",
-      8.5,
-      5,
-      "Hurlingham PBSA, a Qwetu Student Residences project in Nairobi’s Hurlingham area, houses over 800 students and offers a vibrant, amenity-rich environment. Its efficient design features multiple access points and centrally located shared spaces like lounges, study rooms, a gym, and laundry facilities.",
-      50000,
-      "Equity",
-      "Commercial",
-      "longTermContainer", 
-      "./assets/images/box-img2.jpg"
-    );
-
-    // Generate predefined properties
-    function generateCards() {
-      const properties = [
-        {
-          id: 1,
-          name: "Pension Towers",
-          location: "Nairobi Central Business District (CBD)",
-          irr: 8.5,
-          hold: 5,
-          description: "A prime commercial office building located in the heart of Nairobi's CBD, offering modern amenities and strategic proximity to key business hubs.",
-          min: 500000,
-          type: "Equity",
-          property: "Commercial Office",
-          image: "./assets/images/gitanga3.jpg"
-        },
-    {
-      id: 2,
-      name: "Greenspan Mall",
-      location: "Donholm, Nairobi",
-      irr: .5,
-      hold: 2,
-      description: "A mixed-use development featuring retail spaces and office units, anchored by Naivas Supermarket, providing stable rental income.",
-      min: 150000,
-      type: "Equity",
-      property: "Residential",
-      image: "./assets/images/gitanga1.jpg"
-    },
-    {
-      id: 3,
-      name: "Commercial Property in Nairobi CBD",
-      location: "Nairobi CBD",
-      irr: 300 ,
-      hold: 1,
-      description: "The property is in a prime Nairobi CBD location at Tom Mboya Street and Hakati Road, near major landmarks and transport hubs, offering high visibility.",
-      min: 20000,
-      type: "Equity",
-      property: "Commercial",
-      image: "./assets/images/gitanga2.jpg"
-    },
-    {
-      id: 4,
+    // Properties Array
+    const properties = [
+      {
+        id: 1,
+        name: "Qwetu Hurlingham",
+        location: "Nairobi, Kenya, KenyaNairobi",
+        irr: 8.5,
+        hold: 5,
+        description: "Hurlingham PBSA, a Qwetu Student Residences project in Nairobi’s Hurlingham area, houses over 800 students and offers a vibrant, amenity-rich environment. Its efficient design features multiple access points and centrally located shared spaces like lounges, study rooms, a gym, and laundry facilities.",
+        min: 50000,
+        type: "Equity",
+        property: "Commercial",
+        images: [
+          "assets/images/Qwetu-Hurlingham/1-1.jpg",
+          "assets/images/Qwetu-Hurlingham/3-1 (1).jpg",
+          "assets/images/Qwetu-Hurlingham/5-1.jpg"
+        ]
+      },
+      {
+        id: 1,
+        name: "Pension Towers",
+        location: "Nairobi CBD",
+        irr: 8.5,
+        hold: 5,
+        description: "Prime office building in Nairobi CBD.",
+        min: 500000,
+        type: "Equity",
+        property: "Commercial Office",
+        images: [
+          "./assets/images/pension-towers/ft-img-1.jpg",
+          "./assets/images/pension-towers/ft-img-2.jpg",
+          "./assets/images/pension-towers/ft-img-3.jpg"
+        ]
+      },
+      {
+        id: 4,
       name: "Freedom Heights Mall",
       location: "Lang’ata Road, Nairobi, Kenya",
       irr: 9.8,
@@ -338,70 +209,30 @@
       min: 100000,
       type: "Equity",
       property: "Residential",
-      image: "./assets/images/gitanga1.jpg"
-    },
-    {
-      id: 5,
-      name: "Old Mutual Tower",
-      location: " Hospital Road, Upper Hill, Nairobi",
-      irr: 4.2,
-      hold: 2,
-      description: "Mixed-use development in the heart of Nairobi.",
-      min: 100000,
-      type: "Equity",
-      property: "Commercial",
-      image: "./assets/images/gitanga3.jpg"
-    },
-    {
-      id: 6,
-      name: "Ashok Leyland",
-      location: "ICD Road, Off Mombasa Road, Nairobi",
-      irr: 350,
-      hold: 1,
-      description: "EThe property presents a unique opportunity to acquire a prime site, comprehensively developed with a four storey office block, motor showroom and offices, separate warehouses and motor vehicle workshops with a total gross lettable area of approximately 99,300 square feet.",
-      min: 20000,
-      type: "Equity",
-      property: "Mixed",
-      image: "./assets/images/gitanga1.jpg"
-    },
-    {
-      id: 7,
-      name: "Mombasa Bay Apartments",
-      location: "Mombasa, Kenya",
-      irr: 11,
-      hold: 2,
-      description: "High-end residential apartments on the Mombasa coastline.",
-      min: 180000,
-      type: "Equity",
-      property: "Residential",
-      image: "./assets/images/box-img2.jpg"
-    },
-    {
-      id: 8,
-      name: "NCBA Annex",
-      location: "Woodvale Grove, Westlands, Nairobi",
-      irr: 3.7,
-      hold: 3,
-      description: "NCBA Annex is a prime commercial property in Westlands, Nairobi, anchored by NCBA Bank and ideally positioned in a high-traffic business hub.",
-      min: 100000,
-      type: "Equity",
-      property: "Commercial",
-      image: "./assets/images/gitanga1.jpg"
-    },
-    {
-      id: 9,
-      name: "Prime Tech Hub",
-      location: "Nairobi, Kenya",
-      irr: 15,
-      hold: 1,
-      description: "Innovative tech-focused commercial space.",
-      min: 10000,
-      type: "Equity",
-      property: "Commercial",
-      image: "./assets/images/gitanga3.jpg"
-    },
-    {
-      id: 10,
+        images: [
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal1.jpeg",
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal1.jpeg",
+          "assets/images/Freedom-Heights-Mall/Freedom Heights Mal2 .jpeg"
+        ]
+      },
+      {
+        id: 3,
+        name: "Mombasa Bay Apartments",
+        location: "Mombasa, Kenya",
+        irr: 11,
+        hold: 2,
+        description: "High-end apartments on Mombasa coastline.",
+        min: 180000,
+        type: "Equity",
+        property: "Residential",
+        images: [
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments.jpeg",
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments2.jpeg",
+          "./assets/images/Mombasa-Bay-Apartment/Mombasa-Bay-Apartments3.jpeg"
+        ]
+      },
+       {
+        id: 10,
       name: "Qwetu Parklands",
       location: " Nairobi CBD",
       irr: 9.5,
@@ -410,22 +241,14 @@
       min: 80000,
       type: "Equity",
       property: "Residential",
-      image: "./assets/images/gitanga2.jpg"
-    },
-    {
-      id: 11,
-      name: "GreenTech Park",
-      location: "Nairobi, Kenya",
-      irr: 4.0,
-      hold: 3,
-      description: "A hub for tech startups with ample green spaces.",
-      min: 1500000,
-      type: "Equity",
-      property: "Commercial",
-      image: "./assets/images/gitanga3.jpg"
-    },
-    {
-      id: 12,
+        images: [
+          "assets/images/Qwetu-Parklands/building-e1946579.jpg",
+          "assets/images/Qwetu-Parklands/cluster-b37477d4.jpg",
+          "assets/images/Qwetu-Parklands/premium-4e68db25.jpg"
+        ]
+      },
+                 {
+        id: 12,
       name: "Lavington Towers",
       location: "Lavington, Nairobi",
       irr: 8.5,
@@ -434,61 +257,129 @@
       min: 2500000,
       type: "Equity",
       property: "Residential",
-      image: "./assets/images/gitanga2.jpg"
-    }
-  ];
+        images: [
+          "assets/images/Lavington-Towers/WhatsApp-Image-2024-09-16-at-13.28.11-1-scaled.jpeg",
+          "assets/images/Lavington-Towers/6-Reasons-why-you-should-invest-in-Lavington.png",
+        ]
+      },
+           {
+        id: 2,
+      name: "Greenspan Mall",
+      location: "Donholm, Nairobi",
+      irr: .5,
+      hold: 2,
+      description: "A mixed-use development featuring retail spaces and office units, anchored by Naivas Supermarket, providing stable rental income.",
+      min: 150000,
+      type: "Equity",
+      property: "Residential",
+        images: [
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-jpeg.webp",
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-10-jpeg.webp",
+          "assets/images/Greenspan-Mall/Greenspan-Shopping-Mall-Nairobi-Kenya-TortoisePathcom-2-jpeg.webp"
+        ]
+      },
+           {
+        id: 5,
+      name: "Old Mutual Tower",
+      location: " Hospital Road, Upper Hill, Nairobi",
+      irr: 4.2,
+      hold: 2,
+      description: "Mixed-use development in the heart of Nairobi.",
+      min: 100000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Old-Mutual-Tower/The Old Mutual Tower.jpg",
+          "assets/images/Old-Mutual-Tower/OLD MUTUAL TOWER .jpeg",
+          "assets/images/Old-Mutual-Tower/Old Mutual Tower3 .jpeg"
+        ]
+      },
+           {
+        id: 8,
+      name: "NCBA Annex",
+      location: "Woodvale Grove, Westlands, Nairobi",
+      irr: 3.7,
+      hold: 3,
+      description: "NCBA Annex is a prime commercial property in Westlands, Nairobi, anchored by NCBA Bank and ideally positioned in a high-traffic business hub.",
+      min: 100000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/NCBA-Annex/unnamed (1).webp",
+          "assets/images/NCBA-Annex/unnamed (2).webp",
+          "assets/images/NCBA-Annex/unnamed.webp"
+        ]
+      },
+           {
+        id: 11,
+      name: "GreenTech Park",
+      location: "Nairobi, Kenya",
+      irr: 4.0,
+      hold: 3,
+      description: "A hub for tech startups with ample green spaces.",
+      min: 1500000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/GreenTech-Park/greentech_park-maligaon_guwahati-guwahati-greentech_projects.avif",
+          "assets/images/GreenTech-Park/download.jpg",
+          "assets/images/GreenTech-Park/fs.avif"
+        ]
+      },
+           {
+        name: "Commercial Property in Nairobi CBD",
+      location: "Nairobi CBD",
+      irr: 300 ,
+      hold: 1,
+      description: "The property is in a prime Nairobi CBD location at Tom Mboya Street and Hakati Road, near major landmarks and transport hubs, offering high visibility.",
+      min: 20000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Commercial-Property-in-Nairobi-CBD/img20220201131100-min.jpg",
+          "assets/images/Commercial-Property-in-Nairobi-CBD/dc31da15-d670-448d-8c62-770ee7c7eb93.webp",
+          "assets/images/Commercial-Property-in-Nairobi-CBD/84336469-d1a5-4e9b-a3f5-bf2630356558.webp"
+        ]
+      },
+           {
+        id: 6,
+      name: "Ashok Leyland",
+      location: "ICD Road, Off Mombasa Road, Nairobi",
+      irr: 350,
+      hold: 1,
+      description: "EThe property presents a unique opportunity to acquire a prime site, comprehensively developed with a four storey office block, motor showroom and offices, separate warehouses and motor vehicle workshops with a total gross lettable area of approximately 99,300 square feet.",
+      min: 20000,
+      type: "Equity",
+      property: "Mixed",
+        images: [
+          "assets/images/Ashok-Leyland/46ddb5e4-3f53-499e-8df3-8383b47bc723-0.webp",
+          "assets/images/Ashok-Leyland/78b38a30-f367-42f1-879d-351c1bb8d8d9-0.webp",
+          "assets/images/Ashok-Leyland/c0139280-6c98-473d-a5e4-cc5fc50da36e-0.webp",
+          "assets/images/Ashok-Leyland/fb1d9c3c-4f29-46dc-9da2-42610b7efedf-0.webp"
+        ]
+      },
+           {
+        id: 9,
+      name: "iHub",
+      location: "Jahazi Building, 154 James Gichuru Road, Lavington, Nairobi, Kenya",
+      irr: 15,
+      hold: 1,
+      description: "Established in 2010, iHub is one of Nairobi's most renowned innovation hubs. It serves as an open space for technologists, investors, tech companies, and hackers to interact and work on ideas. iHub has been instrumental in nurturing startups and fostering a collaborative tech community in Kenya.",
+      min: 10000,
+      type: "Equity",
+      property: "Commercial",
+        images: [
+          "assets/images/Prime-Tech-Hub/1731755916831.png",
+          "assets/images/Prime-Tech-Hub/IHub (1).jpg",
+          "assets/images/Prime-Tech-Hub/ihub.jpg"
+        ]
+      },
+    ];
 
-  
-  const containers = ["longTermContainer", "shortTermContainer", "aggressiveContainer"];
+    // Generate cards
+    properties.forEach(createCard);
 
-  properties.forEach((prop, i) => {
-    const container = containers[i % 3]; // rotate among the three containers
-    createCard(
-      prop.id,
-      prop.name,
-      prop.location,
-      prop.irr,
-      prop.hold,
-      prop.description,
-      prop.min,
-      prop.type,
-      prop.property,
-      container,
-      prop.image
-    );
-  });
-}
-
-    generateCards();
-
-    searchInput.addEventListener("input", () => {
-      const q = searchInput.value.toLowerCase();
-      getCards().forEach(c => {
-        const name = c.dataset.name.toLowerCase();
-        const loc = c.dataset.location.toLowerCase();
-        c.style.display = name.includes(q) || loc.includes(q) ? "block" : "none";
-      });
-    });
-
-    sortSelect.addEventListener("change", () => {
-      const mode = sortSelect.value;
-      const allCards = Array.from(getCards());
-      const sorted = [...allCards].sort((a, b) => {
-        if (mode === "irr") return parseFloat(b.dataset.irr) - parseFloat(a.dataset.irr);
-        if (mode === "hold") return parseFloat(a.dataset.hold) - parseFloat(b.dataset.hold);
-        return 0;
-      });
-      const allContainers = ["longTermContainer", "shortTermContainer", "aggressiveContainer"];
-      allContainers.forEach(id => document.getElementById(id).innerHTML = "");
-      sorted.forEach(c => {
-        const hold = parseFloat(c.dataset.hold);
-        const target = hold >= 3 ? "longTermContainer" : hold >= 1 ? "shortTermContainer" : "aggressiveContainer";
-        document.getElementById(target).appendChild(c);
-      });
-    });
-    closeModal.addEventListener("click", () => {
-      modal.classList.add("hidden");
-    });
   </script>
+
 </body>
 </html>
